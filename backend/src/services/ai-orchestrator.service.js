@@ -1,0 +1,108 @@
+const agentService = require('./agent.service');
+const openAIService = require('./ai.service');
+const mockAIService = require('./mock-ai.service');
+
+const VALID_PROVIDERS = ['mock', 'openai', 'auto'];
+
+async function generateAgentResponse(params) {
+  const provider = getAIProvider();
+
+  if (provider === 'mock') {
+    return generateWithMock(params);
+  }
+
+  if (provider === 'openai') {
+    return generateWithOpenAIOrFallback(params);
+  }
+
+  return generateWithAuto(params);
+}
+
+function getAIProvider() {
+  const provider = String(process.env.AI_PROVIDER || 'mock').toLowerCase().trim();
+  return VALID_PROVIDERS.includes(provider) ? provider : 'mock';
+}
+
+async function generateWithMock(params) {
+  try {
+    const result = await mockAIService.generateMockAgentResponse(params);
+
+    if (openAIService.isValidAgentPayload(result)) {
+      return {
+        result,
+        source: 'mock',
+      };
+    }
+
+    console.error('[AI Orchestrator] Provider mock retornou payload invalido.');
+  } catch (error) {
+    console.error('[AI Orchestrator] Falha no provider mock:', error.message);
+  }
+
+  return generateWithFallback(params);
+}
+
+async function generateWithOpenAIOrFallback(params) {
+  const result = await openAIService.generateAgentResponse(params);
+
+  if (result) {
+    return {
+      result,
+      source: 'openai',
+    };
+  }
+
+  return generateWithFallback(params);
+}
+
+async function generateWithAuto(params) {
+  if (openAIService.isOpenAIConfigured()) {
+    const openAIResult = await openAIService.generateAgentResponse(params);
+
+    if (openAIResult) {
+      return {
+        result: openAIResult,
+        source: 'openai',
+      };
+    }
+  }
+
+  return generateWithMock(params);
+}
+
+function generateWithFallback(params) {
+  const fallbackResult = agentService.generateFallbackResponse({
+    conversation: params.conversation,
+    message: params.message,
+  });
+
+  return {
+    result: normalizeFallbackResult({
+      fallbackResult,
+      from: params.from,
+    }),
+    source: 'fallback',
+  };
+}
+
+function normalizeFallbackResult({ fallbackResult, from }) {
+  const conversation = fallbackResult.conversation;
+
+  return {
+    resposta: fallbackResult.resposta,
+    estado: conversation.estado,
+    lead: {
+      telefone: from,
+      nome: conversation.nome || null,
+      tipoNegocio: conversation.tipoNegocio || null,
+      dorPrincipal: conversation.dorPrincipal || null,
+      nivelInteresse: conversation.nivelInteresse || 'frio',
+    },
+    acao: fallbackResult.acao || 'continuar_conversa',
+  };
+}
+
+module.exports = {
+  generateAgentResponse,
+  getAIProvider,
+};
