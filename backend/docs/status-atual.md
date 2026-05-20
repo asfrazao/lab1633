@@ -23,7 +23,11 @@
 - Preparacao para arquitetura agentica
 - `agent-tools.service.js` criado como camada inicial de ferramentas do agente
 - `agentic-orchestrator.service.js` criado como ponto central futuro da IA agentica
-- Ainda sem function calling/tools reais da OpenAI nesta etapa
+- IA Agentic v1 implementada para OpenAI com loop manual da Responses API
+- OpenAI em modo agentic via tools reais do backend
+- Tools disponiveis: `get_client_profile`, `save_lead`, `create_hot_lead_notification`, `finish_conversation`, `restart_conversation`, `get_plans`, `get_business_playbook`
+- `#mock` mantem modo sem custo
+- `#openai` ativa OpenAI agentic por numero
 
 ## Proximos passos
 
@@ -33,4 +37,7 @@
 4. Testar demonstracao local no WhatsApp pessoal via `#lab1633`
 5. Migrar persistencia para banco
 6. Ativar OpenAI real quando houver credito
-7. Integrar OpenAI function calling/tools reais ao orquestrador agentico
+7. Migrar persistencia para banco real
+8. Adicionar autenticacao admin
+9. Criar painel de perfis
+10. Avaliar WhatsApp oficial

@@ -1,5 +1,6 @@
 const agentService = require('./agent.service');
 const openAIService = require('./ai.service');
+const openAIAgenticService = require('./openai-agentic.service');
 const mockAIService = require('./mock-ai.service');
 
 const VALID_PROVIDERS = ['mock', 'openai', 'auto'];
@@ -43,12 +44,21 @@ async function generateWithMock(params) {
 }
 
 async function generateWithOpenAIOrFallback(params) {
+  const agenticResult = await openAIAgenticService.generateAgenticOpenAIResponse(params);
+
+  if (agenticResult) {
+    return {
+      result: agenticResult,
+      source: 'openai_agentic',
+    };
+  }
+
   const result = await openAIService.generateAgentResponse(params);
 
   if (result) {
     return {
       result,
-      source: 'openai',
+      source: 'fallback',
     };
   }
 
@@ -57,12 +67,12 @@ async function generateWithOpenAIOrFallback(params) {
 
 async function generateWithAuto(params) {
   if (openAIService.isOpenAIConfigured()) {
-    const openAIResult = await openAIService.generateAgentResponse(params);
+    const agenticResult = await openAIAgenticService.generateAgenticOpenAIResponse(params);
 
-    if (openAIResult) {
+    if (agenticResult) {
       return {
-        result: openAIResult,
-        source: 'openai',
+        result: agenticResult,
+        source: 'openai_agentic',
       };
     }
   }

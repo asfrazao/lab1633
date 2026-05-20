@@ -16,6 +16,11 @@ async function findByTelefone(telefone) {
   }) || null;
 }
 
+async function findById(id) {
+  const conversations = await readJsonArray(conversationsFilePath);
+  return conversations.find((conversation) => conversation.id === id) || null;
+}
+
 function createConversation(telefone) {
   const timestamp = nowIso();
 
@@ -72,6 +77,7 @@ async function save(conversation) {
 module.exports = {
   appendMessage,
   createConversation,
+  findById,
   findByTelefone,
   save,
 };

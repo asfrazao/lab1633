@@ -1,17 +1,17 @@
 [
   {
-    "id": "03b45bfc-32e0-4ba5-b563-4695fb67caaa",
-    "telefone": "40651882287131@lid",
-    "leadId": "c90d1ec7-3c93-4788-95bb-95d1d33f24df",
-    "conversationId": "a9a7d0e4-4d37-4cb5-b243-819ef406d689",
-    "nome": "Fabiana",
-    "tipoNegocio": "barbearia",
+    "id": "6d35c344-50f0-4822-86e9-16a8200ae11b",
+    "telefone": "5511998880187",
+    "leadId": "37300780-e1fc-40b6-9549-ccb0834f8166",
+    "conversationId": "5a296349-4129-4f34-823c-7afeda226c0b",
+    "nome": "Alessandro",
+    "tipoNegocio": "letreiros",
     "nivelInteresse": "quente",
-    "titulo": "Lead quente: Fabiana - barbearia",
-    "mensagem": "Cliente Fabiana informou ter uma barbearia, demonstrou interesse em contratar ou testar um agente de IA.",
+    "titulo": "Lead quente: Alessandro - letreiros",
+    "mensagem": "Cliente Alessandro informou trabalhar com letreiros, relatou dificuldade com demora para responder clientes e confirmou interesse em testar ou contratar um agente de IA. Atendimento encaminhado para Alessandro.",
     "status": "nova",
     "read": false,
-    "createdAt": "2026-05-14T22:28:36.925Z",
-    "updatedAt": "2026-05-14T22:28:57.986Z"
+    "createdAt": "2026-05-20T17:12:02.289Z",
+    "updatedAt": "2026-05-20T17:13:34.423Z"
   }
 ]

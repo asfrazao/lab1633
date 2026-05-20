@@ -488,6 +488,56 @@ AI_PROVIDER=auto
 
 Nesse modo, o backend tenta OpenAI quando houver chave configurada e usa mock/fallback se nao houver chave ou se a chamada falhar.
 
+## IA Agentic v1 com OpenAI tools
+
+Quando um perfil esta com `aiProvider=openai`, o backend usa a Responses API em modo agentic controlado. A OpenAI pode solicitar tools, mas quem executa tudo e o backend local. O mock continua sem custo e nunca chama OpenAI.
+
+Tools disponiveis:
+
+- `get_client_profile`
+- `save_lead`
+- `create_hot_lead_notification`
+- `finish_conversation`
+- `restart_conversation`
+- `get_plans`
+- `get_business_playbook`
+
+Fluxo de teste:
+
+```cmd
+curl http://localhost:3000/health
+curl http://localhost:3000/debug/openai/ping
+curl -X PATCH http://localhost:3000/client-profiles/5511999300001/provider -H "Content-Type: application/json" -d "{\"provider\":\"openai\"}"
+curl http://localhost:3000/debug/agentic/5511999300001
+curl -X DELETE http://localhost:3000/debug/data/all
+```
+
+```cmd
+curl -X POST http://localhost:3000/chat-teste -H "Content-Type: application/json" -d "{\"from\":\"5511999300001\",\"message\":\"Oi\"}"
+curl -X POST http://localhost:3000/chat-teste -H "Content-Type: application/json" -d "{\"from\":\"5511999300001\",\"message\":\"Trabalho com letreiros\"}"
+curl -X POST http://localhost:3000/chat-teste -H "Content-Type: application/json" -d "{\"from\":\"5511999300001\",\"message\":\"Demoro para responder orçamento\"}"
+curl -X POST http://localhost:3000/chat-teste -H "Content-Type: application/json" -d "{\"from\":\"5511999300001\",\"message\":\"Quero testar isso no meu WhatsApp\"}"
+curl -X POST http://localhost:3000/chat-teste -H "Content-Type: application/json" -d "{\"from\":\"5511999300001\",\"message\":\"Meu nome é Alessandro\"}"
+curl http://localhost:3000/notifications
+```
+
+Resultado esperado em modo OpenAI: `source: "openai_agentic"` quando a chamada agentic concluir. Se a OpenAI falhar, o backend usa fallback sem quebrar.
+
+No WhatsApp:
+
+```text
+#openai
+#status
+Oi
+Trabalho com letreiros
+Quero testar isso
+Alessandro
+#mock
+Oi
+```
+
+Veja no log do backend: `[Chat] Source da resposta: openai_agentic` ou `mock`.
+
 ## Git e GitHub
 
 Comandos sugeridos para commit inicial:

@@ -1,6 +1,7 @@
 const aiService = require('../services/ai.service');
 const aiOrchestratorService = require('../services/ai-orchestrator.service');
 const clientProfileService = require('../services/client-profile.service');
+const { getAvailableToolNames } = require('../services/openai-tools.schema');
 const { inspectDataFiles } = require('../services/debug-file.service');
 
 function handleOpenAIDebug(req, res) {
@@ -57,6 +58,29 @@ async function handleProfileDebug(req, res, next) {
   }
 }
 
+async function handleAgenticDebug(req, res, next) {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({
+      erro: 'Rota nao encontrada',
+    });
+  }
+
+  try {
+    const profile = await clientProfileService.getClientProfileByPhone(req.params.phone);
+
+    return res.json({
+      phone: clientProfileService.normalizePhone(req.params.phone),
+      profile,
+      provider: aiOrchestratorService.getAIProvider(profile),
+      openaiConfigured: aiService.isOpenAIConfigured(),
+      agenticEnabled: true,
+      availableTools: getAvailableToolNames(),
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 function handleRuntimeDebug(req, res) {
   if (process.env.NODE_ENV === 'production') {
     return res.status(404).json({
@@ -94,6 +118,7 @@ async function handleFilesDebug(req, res, next) {
 }
 
 module.exports = {
+  handleAgenticDebug,
   handleAIDebug,
   handleFilesDebug,
   handleOpenAIDebug,

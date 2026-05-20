@@ -97,6 +97,7 @@ async function processIncomingMessage({ from, message } = {}) {
       telefone: lead.telefone,
       nome: lead.nome,
       tipoNegocio: lead.tipoNegocio,
+      dorPrincipal: lead.dorPrincipal,
       nivelInteresse: lead.nivelInteresse,
       profileId: lead.profileId,
       clientName: lead.clientName,
