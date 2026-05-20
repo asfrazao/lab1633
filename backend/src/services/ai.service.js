@@ -35,7 +35,7 @@ function getOpenAIClient() {
   });
 }
 
-async function generateAgentResponse({ from, message, conversation, lead, nichoInfo }) {
+async function generateAgentResponse({ from, message, conversation, lead, nichoInfo, clientProfile }) {
   try {
     if (!isOpenAIConfigured()) {
       if (!warnedMissingApiKey) {
@@ -52,8 +52,8 @@ async function generateAgentResponse({ from, message, conversation, lead, nichoI
 
     const response = await client.responses.create({
       model,
-      instructions: buildAgenteVendedorPrompt(),
-      input: JSON.stringify(buildModelContext({ from, message, conversation, lead, nichoInfo })),
+      instructions: buildAgenteVendedorPrompt({ clientProfile }),
+      input: JSON.stringify(buildModelContext({ from, message, conversation, lead, nichoInfo, clientProfile })),
     });
 
     const outputText = response.output_text;
@@ -125,7 +125,7 @@ async function pingOpenAI() {
   }
 }
 
-function buildModelContext({ from, message, conversation, lead, nichoInfo }) {
+function buildModelContext({ from, message, conversation, lead, nichoInfo, clientProfile }) {
   return {
     mensagemAtual: message,
     telefone: from,
@@ -137,6 +137,15 @@ function buildModelContext({ from, message, conversation, lead, nichoInfo }) {
     ultimasMensagens: (conversation.historico || []).slice(-10),
     lead: lead || null,
     nichoInfo: nichoInfo || null,
+    clientProfile: clientProfile
+      ? {
+          id: clientProfile.id,
+          nomeCliente: clientProfile.nomeCliente,
+          tipoNegocio: clientProfile.tipoNegocio,
+          descricao: clientProfile.descricao,
+          promptPerfil: clientProfile.promptPerfil,
+        }
+      : null,
   };
 }
 

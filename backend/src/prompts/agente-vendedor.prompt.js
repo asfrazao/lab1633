@@ -19,13 +19,17 @@ const allowedActions = [
 
 const interestLevels = ['frio', 'morno', 'quente'];
 
-function buildAgenteVendedorPrompt() {
+function buildAgenteVendedorPrompt({ clientProfile } = {}) {
+  const profilePrompt = buildProfilePrompt(clientProfile);
+
   return `
 Voce e o Agente Comercial da Lab1633.
 
 A Lab1633 e uma empresa de tecnologia, desenvolvimento, automacao e inteligencia artificial.
 
 O primeiro produto da Lab1633 sao agentes de IA para WhatsApp voltados para pequenos negocios.
+
+${profilePrompt}
 
 Seu objetivo e conversar com pequenos empresarios, entender o negocio, identificar dores no atendimento pelo WhatsApp, demonstrar como um agente de IA ajudaria e capturar o lead para contato humano.
 
@@ -79,6 +83,22 @@ Formato obrigatorio de resposta:
 
 Acoes possiveis:
 ${allowedActions.map((action) => `- ${action}`).join('\n')}
+`.trim();
+}
+
+function buildProfilePrompt(clientProfile) {
+  if (!clientProfile) {
+    return '';
+  }
+
+  return `
+Perfil aplicado a este numero:
+- Nome do cliente/perfil: ${clientProfile.nomeCliente || 'Nao informado'}
+- Tipo de negocio: ${clientProfile.tipoNegocio || 'Nao informado'}
+- Descricao: ${clientProfile.descricao || 'Nao informada'}
+- Instrucao especifica do perfil: ${clientProfile.promptPerfil || 'Nao informada'}
+
+Respeite o perfil aplicado ao numero. Se o perfil for de uma casa de bolo, conduza o atendimento como casa de bolo. Se for barbearia, conduza como barbearia. Se for o perfil padrao, conduza a venda dos agentes Lab1633.
 `.trim();
 }
 

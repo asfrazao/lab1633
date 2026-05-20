@@ -3,13 +3,17 @@ const path = require('path');
 
 const { readJsonArray, writeJsonArray } = require('../utils/jsonFile.util');
 const { nowIso } = require('../utils/date.util');
+const { normalizePhone } = require('./client-profile.service');
 
 const conversationsFilePath = path.join(__dirname, '..', 'data', 'conversations.json');
 const MAX_HISTORY_MESSAGES = 30;
 
 async function findByTelefone(telefone) {
   const conversations = await readJsonArray(conversationsFilePath);
-  return conversations.find((conversation) => conversation.telefone === telefone) || null;
+  const normalizedTelefone = normalizePhone(telefone);
+  return conversations.find((conversation) => {
+    return conversation.telefone === telefone || normalizePhone(conversation.telefone) === normalizedTelefone;
+  }) || null;
 }
 
 function createConversation(telefone) {

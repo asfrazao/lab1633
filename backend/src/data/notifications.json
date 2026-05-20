@@ -1,1 +1,17 @@
-﻿[]
+[
+  {
+    "id": "03b45bfc-32e0-4ba5-b563-4695fb67caaa",
+    "telefone": "40651882287131@lid",
+    "leadId": "c90d1ec7-3c93-4788-95bb-95d1d33f24df",
+    "conversationId": "a9a7d0e4-4d37-4cb5-b243-819ef406d689",
+    "nome": "Fabiana",
+    "tipoNegocio": "barbearia",
+    "nivelInteresse": "quente",
+    "titulo": "Lead quente: Fabiana - barbearia",
+    "mensagem": "Cliente Fabiana informou ter uma barbearia, demonstrou interesse em contratar ou testar um agente de IA.",
+    "status": "nova",
+    "read": false,
+    "createdAt": "2026-05-14T22:28:36.925Z",
+    "updatedAt": "2026-05-14T22:28:57.986Z"
+  }
+]

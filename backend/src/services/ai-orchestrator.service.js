@@ -5,7 +5,7 @@ const mockAIService = require('./mock-ai.service');
 const VALID_PROVIDERS = ['mock', 'openai', 'auto'];
 
 async function generateAgentResponse(params) {
-  const provider = getAIProvider();
+  const provider = getAIProvider(params?.clientProfile);
 
   if (provider === 'mock') {
     return generateWithMock(params);
@@ -18,8 +18,8 @@ async function generateAgentResponse(params) {
   return generateWithAuto(params);
 }
 
-function getAIProvider() {
-  const provider = String(process.env.AI_PROVIDER || 'mock').toLowerCase().trim();
+function getAIProvider(clientProfile) {
+  const provider = String(clientProfile?.aiProvider || process.env.AI_PROVIDER || 'mock').toLowerCase().trim();
   return VALID_PROVIDERS.includes(provider) ? provider : 'mock';
 }
 

@@ -1,1 +1,298 @@
-﻿[]
+[
+  {
+    "id": "a9a7d0e4-4d37-4cb5-b243-819ef406d689",
+    "telefone": "40651882287131@lid",
+    "estado": "finalizado",
+    "tipoNegocio": "barbearia",
+    "dorPrincipal": null,
+    "nome": "Fabiana",
+    "nivelInteresse": "quente",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "Oi",
+        "createdAt": "2026-05-14T22:26:57.760Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Oi, eu sou o Agente Comercial da Lab1633. A gente cria agentes de IA para atendimento no WhatsApp. Qual e o seu tipo de negocio?",
+        "createdAt": "2026-05-14T22:26:57.769Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Salão de beleza",
+        "createdAt": "2026-05-14T22:27:21.301Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Legal, barbearia costuma sofrer com agenda e remarcacao. Hoje sua maior dor e responder horarios, confirmar servicos ou lembrar clientes?",
+        "createdAt": "2026-05-14T22:27:21.309Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Sim",
+        "createdAt": "2026-05-14T22:27:38.723Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Imagine um cliente querendo cortar cabelo. O agente pergunta servico, dia, horario preferido e profissional. Depois confirma o agendamento e pode lembrar o cliente antes do horario. Quer que eu explique como a Lab1633 montaria esse fluxo para voce?",
+        "createdAt": "2026-05-14T22:27:38.725Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Sim",
+        "createdAt": "2026-05-14T22:28:09.545Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "A Lab1633 configuraria um agente com as perguntas do seu atendimento para organizar agendamentos, servicos e lembretes pelo WhatsApp sem depender de resposta manual o tempo todo. Isso reduziria sua dor de responder tudo manualmente. Faz sentido testar isso no seu caso?",
+        "createdAt": "2026-05-14T22:28:09.546Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Sim",
+        "createdAt": "2026-05-14T22:28:36.858Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Perfeito. Posso encaminhar isso para o Alessandro avaliar o melhor formato para o seu negocio. Qual e o seu nome?",
+        "createdAt": "2026-05-14T22:28:36.860Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Fabiana",
+        "createdAt": "2026-05-14T22:28:57.937Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Perfeito, Fabiana. Vou encaminhar seu contato para o Alessandro avaliar o melhor formato para o seu negocio. Em breve ele pode continuar a conversa com voce por aqui.",
+        "createdAt": "2026-05-14T22:28:57.941Z"
+      }
+    ],
+    "createdAt": "2026-05-14T22:26:57.754Z",
+    "updatedAt": "2026-05-14T22:28:57.942Z"
+  },
+  {
+    "id": "4ada34ec-a3df-4099-89d6-4e1d3f336c8a",
+    "telefone": "126950760812679@lid",
+    "estado": "identificar_negocio",
+    "tipoNegocio": null,
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "frio",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "Ola",
+        "createdAt": "2026-05-14T23:41:25.851Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Oi, eu sou o Agente Comercial da Lab1633. A gente cria agentes de IA para atendimento no WhatsApp. Qual e o seu tipo de negocio?",
+        "createdAt": "2026-05-14T23:41:25.852Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Oi",
+        "createdAt": "2026-05-20T16:45:29.377Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Oi! Me conta rapidinho: qual é o seu tipo de negócio?",
+        "createdAt": "2026-05-20T16:45:32.979Z"
+      }
+    ],
+    "createdAt": "2026-05-14T23:41:25.850Z",
+    "updatedAt": "2026-05-20T16:45:32.985Z",
+    "profileId": "profile-126950760812679",
+    "clientName": "Demonstração Lab1633",
+    "aiProvider": "openai"
+  },
+  {
+    "id": "d3ebd0b9-7a62-4e38-ab1b-638fbb8f666a",
+    "telefone": "status@broadcast",
+    "estado": "diagnosticar_dor",
+    "tipoNegocio": "https//openspotifycom/track/3b0j1hocygtodegc66i7gcsi=t2d12ey",
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "morno",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "https://open.spotify.com/track/3B0J1HOCygtODEgc66i7GC?si=t2D12eYZS7C8_8uzD6s69g",
+        "createdAt": "2026-05-15T18:49:38.395Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Legal. Nesse tipo de negocio, um agente de IA pode ajudar a responder duvidas, coletar informacoes do cliente e organizar oportunidades pelo WhatsApp. Hoje sua maior dificuldade e responder rapido, organizar pedidos ou fechar mais vendas?",
+        "createdAt": "2026-05-15T18:49:38.397Z"
+      }
+    ],
+    "createdAt": "2026-05-15T18:49:38.395Z",
+    "updatedAt": "2026-05-15T18:49:38.399Z"
+  },
+  {
+    "id": "4648face-fe6f-4324-9b13-712c4ae4191e",
+    "telefone": "5511997622828",
+    "estado": "diagnosticar_dor",
+    "tipoNegocio": "doceria",
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "morno",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "Oi",
+        "createdAt": "2026-05-20T15:44:01.249Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Oi, eu sou o Agente Comercial da Lab1633. A gente cria agentes de IA para atendimento no WhatsApp. Qual e o seu tipo de negocio?",
+        "createdAt": "2026-05-20T15:44:01.253Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Oi",
+        "createdAt": "2026-05-20T15:44:37.685Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Legal, doceria costuma perder muito tempo com orcamentos incompletos. Hoje sua maior dor no WhatsApp e pedido incompleto, demora para responder ou muita pergunta repetida?",
+        "createdAt": "2026-05-20T15:44:37.687Z"
+      }
+    ],
+    "createdAt": "2026-05-20T15:44:01.246Z",
+    "updatedAt": "2026-05-20T15:44:37.689Z",
+    "profileId": "casa-de-bolo",
+    "clientName": "Casa de Bolo",
+    "aiProvider": "mock"
+  },
+  {
+    "id": "d3df6ca9-f0fa-4b63-b2f1-b5232ba77ca9",
+    "telefone": "5511888877777",
+    "estado": "identificar_negocio",
+    "tipoNegocio": null,
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "frio",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "Oi",
+        "createdAt": "2026-05-20T15:44:01.269Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Oi, eu sou o Agente Comercial da Lab1633. A gente cria agentes de IA para atendimento no WhatsApp. Qual e o seu tipo de negocio?",
+        "createdAt": "2026-05-20T15:44:01.271Z"
+      }
+    ],
+    "createdAt": "2026-05-20T15:44:01.269Z",
+    "updatedAt": "2026-05-20T15:44:01.275Z",
+    "profileId": "default",
+    "clientName": "Demonstração Lab1633",
+    "aiProvider": "mock"
+  },
+  {
+    "id": "4302fc5a-3a62-47a7-8aa9-8cd6f8bfec59",
+    "telefone": "5511999999999",
+    "estado": "apresentar_solucao",
+    "tipoNegocio": "ola de novo no mock",
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "morno",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "Ola",
+        "createdAt": "2026-05-20T16:09:13.627Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Olá! Sou o agente comercial da Lab1633. Para eu te mostrar como um agente de IA no WhatsApp poderia ajudar, qual é o seu tipo de negócio?",
+        "createdAt": "2026-05-20T16:09:16.568Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Ola de novo no mock",
+        "createdAt": "2026-05-20T16:09:26.087Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Legal. Nesse tipo de negocio, um agente de IA pode ajudar a responder duvidas, coletar informacoes do cliente e organizar oportunidades pelo WhatsApp. Hoje sua maior dificuldade e responder rapido, organizar pedidos ou fechar mais vendas?",
+        "createdAt": "2026-05-20T16:09:26.089Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Ola usando openai",
+        "createdAt": "2026-05-20T16:09:31.302Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Perfeito, estou por aqui. Hoje, no seu WhatsApp, a maior dificuldade é responder rápido, organizar os contatos ou transformar conversas em vendas?",
+        "createdAt": "2026-05-20T16:09:36.545Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Ola",
+        "createdAt": "2026-05-20T16:38:35.301Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Imagine um cliente chamando no WhatsApp. O agente faria as primeiras perguntas, entenderia o que ele precisa, coletaria dados importantes e te entregaria um resumo para voce responder com mais velocidade.",
+        "createdAt": "2026-05-20T16:38:35.304Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Ola",
+        "createdAt": "2026-05-20T16:39:32.336Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "A Lab1633 configuraria um agente com as perguntas do seu atendimento para organizar o WhatsApp do seu negocio e reduzir respostas manuais. Faz sentido testar isso no seu caso?",
+        "createdAt": "2026-05-20T16:39:32.338Z"
+      }
+    ],
+    "createdAt": "2026-05-20T16:09:13.626Z",
+    "updatedAt": "2026-05-20T16:39:32.339Z",
+    "profileId": "default",
+    "clientName": "Demonstração Lab1633",
+    "aiProvider": "mock"
+  },
+  {
+    "id": "8db8df12-7cb1-47ed-954c-afebf9f945ed",
+    "telefone": "5511998880187",
+    "estado": "identificar_negocio",
+    "tipoNegocio": null,
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "frio",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "Ola",
+        "createdAt": "2026-05-20T16:41:07.921Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Olá! Eu sou o agente da Lab1633. A gente ajuda pequenos negócios a atender melhor pelo WhatsApp com agentes de IA. Qual é o seu tipo de negócio?",
+        "createdAt": "2026-05-20T16:41:12.032Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Ola",
+        "createdAt": "2026-05-20T16:41:54.429Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Olá! Para eu te mostrar uma simulação útil, me conta: qual é o seu tipo de negócio?",
+        "createdAt": "2026-05-20T16:41:59.162Z"
+      }
+    ],
+    "createdAt": "2026-05-20T16:41:07.920Z",
+    "updatedAt": "2026-05-20T16:41:59.165Z",
+    "profileId": "profile-5511998880187",
+    "clientName": "Demonstração Lab1633",
+    "aiProvider": "openai"
+  }
+]

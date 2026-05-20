@@ -38,9 +38,15 @@ const greetingKeywords = ['oi', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'e a
 
 async function generateMockAgentResponse({ from, message, conversation, lead, nichoInfo }) {
   const currentState = conversation.estado || 'inicio';
-  const detectedBusiness = identifyBusinessType(message) || conversation.tipoNegocio || lead?.tipoNegocio || null;
+  const genericBusiness = detectGenericBusiness(message, conversation);
+  const detectedBusiness =
+    identifyBusinessType(message) ||
+    (genericBusiness.detected ? genericBusiness.tipoNegocio : null) ||
+    conversation.tipoNegocio ||
+    lead?.tipoNegocio ||
+    null;
   const resolvedNichoInfo = nichoInfo || (detectedBusiness ? nichos[detectedBusiness] : null);
-  const businessPain = detectBusinessPain(message);
+  const businessPain = detectBusinessPain(message, conversation);
   const isHotLead = detectBuyingIntent(message);
   const nome = inferName(message, currentState) || conversation.nome || lead?.nome || null;
   const hasBusiness = Boolean(detectedBusiness);
@@ -49,6 +55,30 @@ async function generateMockAgentResponse({ from, message, conversation, lead, ni
     conversation.dorPrincipal ||
     lead?.dorPrincipal ||
     null;
+  const stateOverride = getStateSpecificResponse({
+    currentState,
+    message,
+    tipoNegocio: detectedBusiness,
+    nichoInfo: resolvedNichoInfo,
+    dorPrincipal,
+    nome,
+  });
+
+  if (stateOverride) {
+    return {
+      resposta: stateOverride.resposta,
+      estado: stateOverride.estado,
+      lead: {
+        telefone: from,
+        nome,
+        tipoNegocio: detectedBusiness,
+        dorPrincipal: stateOverride.dorPrincipal || dorPrincipal,
+        nivelInteresse: stateOverride.nivelInteresse,
+      },
+      acao: stateOverride.acao,
+    };
+  }
+
   const nivelInteresse = strongestInterest(
     conversation.nivelInteresse || lead?.nivelInteresse || 'frio',
     classifyInterest({ hasBusiness, hasPain: businessPain.hasPain || Boolean(dorPrincipal), isHotLead })
@@ -62,6 +92,7 @@ async function generateMockAgentResponse({ from, message, conversation, lead, ni
     nome,
   });
   const resposta = buildResponse({
+    currentState,
     estado,
     tipoNegocio: detectedBusiness,
     nichoInfo: resolvedNichoInfo,
@@ -92,6 +123,80 @@ function identifyBusinessType(message) {
   })?.[0] || null;
 }
 
+function detectGenericBusiness(message, conversation = {}) {
+  const cleanedMessage = cleanBusinessText(message);
+  const patterns = [
+    { regex: /^trabalho com\s+(.+)$/, prefix: '' },
+    { regex: /^faco\s+(.+)$/, prefix: '' },
+    { regex: /^tenho uma\s+(.+)$/, prefix: '' },
+    { regex: /^tenho um\s+(.+)$/, prefix: '' },
+    { regex: /^sou\s+(.+)$/, prefix: '' },
+    { regex: /^vendo\s+(.+)$/, prefix: 'venda de ' },
+  ];
+
+  for (const pattern of patterns) {
+    const match = cleanedMessage.match(pattern.regex);
+
+    if (match?.[1]) {
+      const tipoNegocio = normalizeBusinessLabel(`${pattern.prefix}${match[1]}`);
+
+      if (tipoNegocio) {
+        return {
+          detected: true,
+          tipoNegocio,
+          descricao: cleanedMessage,
+        };
+      }
+    }
+  }
+
+  if (isLikelyBusinessShortAnswer(message, conversation)) {
+    const tipoNegocio = normalizeBusinessType(message);
+
+    if (tipoNegocio) {
+      return {
+        detected: true,
+        tipoNegocio,
+        descricao: cleanedMessage,
+      };
+    }
+  }
+
+  return {
+    detected: false,
+    tipoNegocio: null,
+    descricao: null,
+  };
+}
+
+function isLikelyBusinessShortAnswer(message, conversation = {}) {
+  const state = conversation.estado || 'inicio';
+
+  if (!['inicio', 'identificar_negocio'].includes(state)) {
+    return false;
+  }
+
+  const normalizedMessage = cleanBusinessText(message);
+
+  if (!normalizedMessage) {
+    return false;
+  }
+
+  const words = normalizedMessage.split(/\s+/).filter(Boolean);
+
+  if (words.length < 1 || words.length > 5) {
+    return false;
+  }
+
+  if (isGreeting(normalizedMessage) || detectBuyingIntent(normalizedMessage) || detectBusinessPain(normalizedMessage).hasPain) {
+    return false;
+  }
+
+  const rejectedShortAnswers = ['sim', 'nao', 'talvez', 'quero', 'ok', 'teste', 'beleza', 'certo', 'entendi'];
+
+  return !rejectedShortAnswers.includes(normalizedMessage);
+}
+
 function isGreeting(message) {
   const normalizedMessage = normalizeText(message).trim();
   return greetingKeywords.some((keyword) => normalizedMessage === normalizeText(keyword));
@@ -107,6 +212,49 @@ function detectBuyingIntent(message) {
   return buyingIntentKeywords.some((keyword) => normalizedMessage.includes(normalizeText(keyword)));
 }
 
+function isPositiveConfirmation(message) {
+  const normalizedMessage = normalizeIntentText(message);
+  const confirmations = [
+    'sim',
+    'ss',
+    'claro',
+    'pode ser',
+    'faz sentido',
+    'quero',
+    'quero sim',
+    'tenho interesse',
+    'gostei',
+    'interessante',
+    'legal',
+    'bora',
+    'vamos',
+    'vamos testar',
+    'pode testar',
+    'quero testar',
+    'quero ver',
+    'gostei da ideia',
+    'faz sim',
+  ];
+
+  return confirmations.includes(normalizedMessage);
+}
+
+function isSoftInterest(message) {
+  const normalizedMessage = normalizeIntentText(message);
+  const softInterestMessages = [
+    'interessante',
+    'legal',
+    'gostei',
+    'bacana',
+    'bom',
+    'faz sentido',
+    'entendi',
+    'certo',
+  ];
+
+  return softInterestMessages.includes(normalizedMessage);
+}
+
 function classifyInterest({ hasBusiness, hasPain, isHotLead }) {
   if (isHotLead) {
     return 'quente';
@@ -119,8 +267,81 @@ function classifyInterest({ hasBusiness, hasPain, isHotLead }) {
   return 'frio';
 }
 
-function detectBusinessPain(message) {
+function detectBusinessPain(message, conversation = {}) {
   const normalizedMessage = normalizeText(message);
+  const currentState = conversation.estado || 'inicio';
+
+  if (currentState === 'diagnosticar_dor' && ['vendas', 'venda'].includes(normalizedMessage.trim())) {
+    return {
+      hasPain: true,
+      dorPrincipal: 'quer vender mais ou fechar mais oportunidades pelo WhatsApp',
+    };
+  }
+
+  if (
+    normalizedMessage.includes('orcamento') &&
+    (
+      normalizedMessage.includes('responder') ||
+      normalizedMessage.includes('demoro') ||
+      normalizedMessage.includes('demora') ||
+      normalizedMessage.includes('perco tempo')
+    )
+  ) {
+    return {
+      hasPain: true,
+      dorPrincipal: 'perde tempo respondendo orcamentos ou pedidos pelo WhatsApp',
+    };
+  }
+
+  if (
+    normalizedMessage.includes('demoro para responder') ||
+    normalizedMessage.includes('demora para responder') ||
+    normalizedMessage.includes('perco tempo respondendo') ||
+    normalizedMessage.includes('nao consigo responder rapido') ||
+    normalizedMessage.includes('esqueco de responder') ||
+    normalizedMessage.includes('muita mensagem')
+  ) {
+    return {
+      hasPain: true,
+      dorPrincipal: 'demora para responder clientes',
+    };
+  }
+
+  if (
+    normalizedMessage.includes('muitos orcamentos') ||
+    normalizedMessage.includes('cliente pede orcamento') ||
+    normalizedMessage.includes('pedido incompleto')
+  ) {
+    return {
+      hasPain: true,
+      dorPrincipal: 'perde tempo respondendo orcamentos ou pedidos pelo WhatsApp',
+    };
+  }
+
+  if (
+    normalizedMessage.includes('bagunca no whatsapp') ||
+    normalizedMessage.includes('whatsapp baguncado') ||
+    normalizedMessage.includes('whatsapp baguncada')
+  ) {
+    return {
+      hasPain: true,
+      dorPrincipal: 'falta de organizacao no atendimento pelo WhatsApp',
+    };
+  }
+
+  if (normalizedMessage.includes('nao fecho venda') || normalizedMessage.includes('cliente some')) {
+    return {
+      hasPain: true,
+      dorPrincipal: 'perde oportunidades de venda pelo WhatsApp',
+    };
+  }
+
+  if (normalizedMessage.includes('preciso vender mais')) {
+    return {
+      hasPain: true,
+      dorPrincipal: 'quer vender mais pelo WhatsApp',
+    };
+  }
 
   if (normalizedMessage.includes('vender mais')) {
     return {
@@ -231,6 +452,80 @@ function cleanName(value) {
   return name || null;
 }
 
+function getStateSpecificResponse({ currentState, message, tipoNegocio, nichoInfo, dorPrincipal, nome }) {
+  if (currentState === 'finalizado') {
+    if (isRestartRequest(message)) {
+      return {
+        resposta: 'Claro. Vamos comecar um novo atendimento. Qual e o seu tipo de negocio?',
+        estado: 'identificar_negocio',
+        dorPrincipal: null,
+        nivelInteresse: 'frio',
+        acao: 'continuar_conversa',
+      };
+    }
+
+    return {
+      resposta: 'Seu contato ja foi registrado. O Alessandro pode continuar o atendimento com voce por aqui.',
+      estado: 'finalizado',
+      dorPrincipal,
+      nivelInteresse: 'quente',
+      acao: 'finalizar',
+    };
+  }
+
+  if (currentState === 'coletar_nome' && nome) {
+    return {
+      resposta: `Perfeito, ${nome}. Vou encaminhar seu contato para o Alessandro avaliar o melhor formato para o seu negocio. Em breve ele pode continuar a conversa com voce por aqui.`,
+      estado: 'finalizado',
+      dorPrincipal,
+      nivelInteresse: 'quente',
+      acao: 'notificar_humano',
+    };
+  }
+
+  if (currentState === 'coletar_interesse' && isPositiveConfirmation(message)) {
+    return {
+      resposta: 'Perfeito. Posso encaminhar isso para o Alessandro avaliar o melhor formato para o seu negocio. Qual e o seu nome?',
+      estado: 'coletar_nome',
+      dorPrincipal,
+      nivelInteresse: 'quente',
+      acao: 'notificar_humano',
+    };
+  }
+
+  if (currentState === 'apresentar_solucao' && isSoftInterest(message)) {
+    return {
+      resposta: 'Faz sentido testar esse tipo de agente no seu WhatsApp para ver como ele organizaria os atendimentos?',
+      estado: 'coletar_interesse',
+      dorPrincipal,
+      nivelInteresse: 'morno',
+      acao: 'continuar_conversa',
+    };
+  }
+
+  if (currentState === 'apresentar_solucao' && isPositiveConfirmation(message)) {
+    return {
+      resposta: 'Perfeito. Posso encaminhar isso para o Alessandro avaliar o melhor formato para o seu negocio. Qual e o seu nome?',
+      estado: 'coletar_nome',
+      dorPrincipal,
+      nivelInteresse: 'quente',
+      acao: 'notificar_humano',
+    };
+  }
+
+  if (currentState === 'simular_atendimento' && isSoftInterest(message)) {
+    return {
+      resposta: buildSolutionResponse({ tipoNegocio, nichoInfo, dorPrincipal }),
+      estado: 'apresentar_solucao',
+      dorPrincipal,
+      nivelInteresse: 'morno',
+      acao: 'continuar_conversa',
+    };
+  }
+
+  return null;
+}
+
 function getNextState({ currentState, hasBusiness, hasPain, isGreeting, isHotLead, nome }) {
   if (isHotLead) {
     return nome ? 'encaminhar_humano' : 'coletar_nome';
@@ -244,7 +539,11 @@ function getNextState({ currentState, hasBusiness, hasPain, isGreeting, isHotLea
     return 'coletar_nome';
   }
 
-  if (isGreeting || !hasBusiness) {
+  if (currentState === 'coletar_interesse') {
+    return 'coletar_interesse';
+  }
+
+  if (!hasBusiness) {
     return 'identificar_negocio';
   }
 
@@ -275,8 +574,12 @@ function getNextState({ currentState, hasBusiness, hasPain, isGreeting, isHotLea
   return currentState === 'finalizado' ? 'finalizado' : 'diagnosticar_dor';
 }
 
-function buildResponse({ estado, tipoNegocio, nichoInfo, dorPrincipal, nome, isHotLead }) {
+function buildResponse({ currentState, estado, tipoNegocio, nichoInfo, dorPrincipal, nome, isHotLead }) {
   if (estado === 'identificar_negocio') {
+    if (currentState && currentState !== 'inicio') {
+      return 'Entendi. So para eu te mostrar um exemplo mais certeiro: seu negocio vende produto, presta servico ou faz atendimento/agendamento pelo WhatsApp?';
+    }
+
     return 'Oi, eu sou o Agente Comercial da Lab1633. A gente cria agentes de IA para atendimento no WhatsApp. Qual e o seu tipo de negocio?';
   }
 
@@ -297,11 +600,11 @@ function buildResponse({ estado, tipoNegocio, nichoInfo, dorPrincipal, nome, isH
   }
 
   if (estado === 'simular_atendimento') {
-    return buildSimulationResponse(tipoNegocio, nichoInfo);
+    return buildSimulationResponse(tipoNegocio, nichoInfo, dorPrincipal);
   }
 
   if (estado === 'apresentar_solucao') {
-    return `A Lab1633 configuraria um agente com as perguntas do seu atendimento para ${nichoInfo?.beneficioPrincipal || 'organizar o WhatsApp do seu negocio'} Isso reduziria sua dor de ${dorPrincipal || 'responder tudo manualmente'}.`;
+    return buildSolutionResponse({ tipoNegocio, nichoInfo, dorPrincipal });
   }
 
   if (estado === 'coletar_interesse') {
@@ -322,15 +625,39 @@ function buildDiagnosticResponse(tipoNegocio, nichoInfo) {
     igreja_eventos: 'Legal, igrejas e eventos recebem muitas perguntas repetidas. Hoje sua maior dor e horarios, inscricoes ou organizar pedidos recebidos?',
   };
 
-  return questions[tipoNegocio] || `${nichoInfo?.exemploResposta || defaultQuestion}`;
+  if (questions[tipoNegocio] || nichoInfo?.exemploResposta) {
+    return questions[tipoNegocio] || nichoInfo.exemploResposta;
+  }
+
+  if (isSignBusiness(tipoNegocio)) {
+    return 'Legal, trabalhar com letreiros costuma envolver pedidos de orcamento, medidas, prazos, modelos e referencias pelo WhatsApp. Hoje sua maior dificuldade e responder rapido, organizar os pedidos ou fechar mais vendas?';
+  }
+
+  return `Legal. Nesse tipo de negocio, um agente de IA pode ajudar a responder duvidas, coletar informacoes do cliente e organizar oportunidades pelo WhatsApp. Hoje sua maior dificuldade e responder rapido, organizar pedidos ou fechar mais vendas?`;
 }
 
-function buildSimulationResponse(tipoNegocio, nichoInfo) {
+function buildSimulationResponse(tipoNegocio, nichoInfo, dorPrincipal) {
   if (nichoInfo?.exemploResposta) {
     return `${nichoInfo.exemploResposta} Quer que eu explique como a Lab1633 montaria esse fluxo para voce?`;
   }
 
-  return 'O agente faria uma pergunta por vez, coletaria as informacoes importantes e entregaria tudo organizado para voce. Quer que eu explique como a Lab1633 montaria esse fluxo?';
+  if (isSignBusiness(tipoNegocio)) {
+    if (isSalesPain(dorPrincipal)) {
+      return 'Imagine um cliente chamando sobre letreiros. O agente perguntaria o tipo de letreiro, medidas, prazo, local de instalacao e referencia visual. Depois entregaria tudo organizado para voce responder mais rapido e aumentar as chances de fechar a venda.';
+    }
+
+    return 'Imagine um cliente pedindo um letreiro. O agente perguntaria o tipo de letreiro, medidas aproximadas, material desejado, prazo, local de instalacao e se o cliente tem alguma referencia visual. No fim, voce receberia o pedido mais organizado para avaliar e responder.';
+  }
+
+  return 'Imagine um cliente chamando no WhatsApp. O agente faria as primeiras perguntas, entenderia o que ele precisa, coletaria dados importantes e te entregaria um resumo para voce responder com mais velocidade.';
+}
+
+function buildSolutionResponse({ tipoNegocio, nichoInfo, dorPrincipal }) {
+  if (isSignBusiness(tipoNegocio) || !nichoInfo?.beneficioPrincipal) {
+    return 'A Lab1633 configuraria um agente com as perguntas do seu atendimento para organizar o WhatsApp do seu negocio e reduzir respostas manuais. Faz sentido testar isso no seu caso?';
+  }
+
+  return `A Lab1633 configuraria um agente com as perguntas do seu atendimento para ${nichoInfo.beneficioPrincipal} Isso reduziria sua dor de ${dorPrincipal || 'responder tudo manualmente'}. Faz sentido testar isso no seu caso?`;
 }
 
 function formatBusiness(tipoNegocio) {
@@ -342,7 +669,7 @@ function formatBusiness(tipoNegocio) {
     igreja_eventos: 'igrejas ou eventos',
   };
 
-  return labels[tipoNegocio] || 'esse negocio';
+  return labels[tipoNegocio] || `trabalhar com ${tipoNegocio || 'esse negocio'}`;
 }
 
 function strongestInterest(currentInterest, nextInterest) {
@@ -360,6 +687,53 @@ function normalizeText(value) {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
+}
+
+function cleanBusinessText(value) {
+  return normalizeText(value)
+    .replace(/[?!.,;:]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 80);
+}
+
+function normalizeIntentText(value) {
+  return normalizeText(value)
+    .replace(/[?!.,;:]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function isRestartRequest(message) {
+  const normalizedMessage = normalizeIntentText(message);
+  const restartRequests = [
+    'comecar de novo',
+    'reiniciar',
+    'novo atendimento',
+    'outro negocio',
+  ].map(normalizeIntentText);
+
+  return restartRequests.includes(normalizedMessage);
+}
+
+function normalizeBusinessLabel(value) {
+  return normalizeBusinessType(value);
+}
+
+function normalizeBusinessType(value) {
+  return cleanBusinessText(value)
+    .replace(/^(uma|um|uns|umas|a|o|os|as)\s+/, '')
+    .trim()
+    .slice(0, 60);
+}
+
+function isSignBusiness(tipoNegocio) {
+  return normalizeText(tipoNegocio || '').includes('letreiro');
+}
+
+function isSalesPain(dorPrincipal) {
+  const normalizedPain = normalizeText(dorPrincipal || '');
+  return normalizedPain.includes('vender') || normalizedPain.includes('venda') || normalizedPain.includes('oportunidade');
 }
 
 module.exports = {

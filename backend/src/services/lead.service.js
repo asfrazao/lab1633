@@ -19,6 +19,9 @@ async function upsertFromConversation(conversation) {
     tipoNegocio: conversation.tipoNegocio || existingLead?.tipoNegocio || null,
     dorPrincipal: conversation.dorPrincipal || existingLead?.dorPrincipal || null,
     nivelInteresse: conversation.nivelInteresse || existingLead?.nivelInteresse || 'frio',
+    profileId: conversation.profileId || existingLead?.profileId || null,
+    clientName: conversation.clientName || existingLead?.clientName || null,
+    aiProvider: conversation.aiProvider || existingLead?.aiProvider || null,
     resumo: buildResumo(conversation, existingLead),
     status: existingLead?.status || 'novo',
     createdAt: existingLead?.createdAt || timestamp,
@@ -38,9 +41,14 @@ async function upsertFromConversation(conversation) {
 
 function buildResumo(conversation, existingLead) {
   if (conversation.tipoNegocio) {
+    const genericBusiness = !isKnownBusiness(conversation.tipoNegocio);
+
+    if (genericBusiness) {
+      return buildGenericBusinessResumo(conversation);
+    }
+
     const parts = [];
     const business = formatBusinessForResumo(conversation.tipoNegocio);
-
     parts.push(`Cliente${conversation.nome ? ` ${conversation.nome}` : ''} informou ter ${business}`);
 
     if (conversation.dorPrincipal) {
@@ -61,6 +69,37 @@ function buildResumo(conversation, existingLead) {
   return existingLead?.resumo || 'Cliente iniciou contato com o Agente Comercial Lab1633.';
 }
 
+function buildGenericBusinessResumo(conversation) {
+  const parts = [];
+  const business = formatBusinessForResumo(conversation.tipoNegocio);
+
+  if (conversation.nivelInteresse === 'quente') {
+    if (isSalesOrOpportunityPain(conversation.dorPrincipal)) {
+      return `Cliente${conversation.nome ? ` ${conversation.nome}` : ''} informou trabalhar com ${business}, relatou interesse em vender mais ou organizar atendimentos pelo WhatsApp e confirmou interesse em testar ou contratar um agente de IA. Atendimento encaminhado para Alessandro.`;
+    }
+
+    if (conversation.dorPrincipal) {
+      return `Cliente${conversation.nome ? ` ${conversation.nome}` : ''} informou trabalhar com ${business}, relatou dificuldade ${formatPainForResumo(conversation.dorPrincipal)} e confirmou interesse em testar ou contratar um agente de IA. Atendimento encaminhado para Alessandro.`;
+    }
+
+    return `Cliente${conversation.nome ? ` ${conversation.nome}` : ''} informou trabalhar com ${business} e confirmou interesse em testar ou contratar um agente de IA. Atendimento encaminhado para Alessandro.`;
+  }
+
+  parts.push(`Cliente${conversation.nome ? ` ${conversation.nome}` : ''} informou trabalhar com ${business}`);
+
+  if (conversation.dorPrincipal) {
+    parts.push(`relatou dificuldade ${formatPainForResumo(conversation.dorPrincipal)}`);
+  }
+
+  if (conversation.nivelInteresse === 'quente') {
+    parts.push('demonstrou interesse em contratar ou testar um agente de IA');
+  } else {
+    parts.push('demonstrou interesse em organizar atendimentos e oportunidades pelo WhatsApp');
+  }
+
+  return `${parts.join(' e ')}.`;
+}
+
 function formatBusinessForResumo(tipoNegocio) {
   const labels = {
     doceria: 'uma doceria',
@@ -70,7 +109,11 @@ function formatBusinessForResumo(tipoNegocio) {
     igreja_eventos: 'uma igreja ou operacao de eventos',
   };
 
-  return labels[tipoNegocio] || `um negocio do tipo ${tipoNegocio}`;
+  return labels[tipoNegocio] || tipoNegocio;
+}
+
+function isKnownBusiness(tipoNegocio) {
+  return ['doceria', 'marmitaria', 'barbearia', 'assistencia_tecnica', 'igreja_eventos'].includes(tipoNegocio);
 }
 
 function formatPainForResumo(dorPrincipal) {
@@ -93,6 +136,11 @@ function formatPainForResumo(dorPrincipal) {
   }
 
   return `com ${dorPrincipal}`;
+}
+
+function isSalesOrOpportunityPain(dorPrincipal) {
+  const normalizedPain = String(dorPrincipal || '').toLowerCase();
+  return normalizedPain.includes('vender') || normalizedPain.includes('venda') || normalizedPain.includes('oportunidade');
 }
 
 module.exports = {

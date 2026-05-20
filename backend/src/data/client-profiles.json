@@ -1,0 +1,32 @@
+[
+  {
+    "id": "default",
+    "telefone": "*",
+    "nomeCliente": "Demonstração Lab1633",
+    "tipoNegocio": "generico",
+    "aiProvider": "mock",
+    "ativo": true,
+    "descricao": "Perfil padrão para demonstrações gerais da Lab1633.",
+    "promptPerfil": "Você é o Agente Comercial da Lab1633. Seu objetivo é entender o negócio do usuário, identificar dores no WhatsApp, demonstrar como um agente de IA ajudaria, qualificar o lead e encaminhar para Alessandro quando houver interesse."
+  },
+  {
+    "id": "profile-5511998880187",
+    "telefone": "5511998880187",
+    "nomeCliente": "Demonstração Lab1633",
+    "tipoNegocio": "generico",
+    "aiProvider": "openai",
+    "ativo": true,
+    "descricao": "Perfil padrão para demonstrações gerais da Lab1633.",
+    "promptPerfil": "Você é o Agente Comercial da Lab1633. Seu objetivo é entender o negócio do usuário, identificar dores no WhatsApp, demonstrar como um agente de IA ajudaria, qualificar o lead e encaminhar para Alessandro quando houver interesse."
+  },
+  {
+    "id": "profile-126950760812679",
+    "telefone": "126950760812679",
+    "nomeCliente": "Demonstração Lab1633",
+    "tipoNegocio": "generico",
+    "aiProvider": "openai",
+    "ativo": true,
+    "descricao": "Perfil padrão para demonstrações gerais da Lab1633.",
+    "promptPerfil": "Você é o Agente Comercial da Lab1633. Seu objetivo é entender o negócio do usuário, identificar dores no WhatsApp, demonstrar como um agente de IA ajudaria, qualificar o lead e encaminhar para Alessandro quando houver interesse."
+  }
+]

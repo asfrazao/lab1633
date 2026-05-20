@@ -8,6 +8,7 @@ const chatRoutes = require('./routes/chat.routes');
 const debugRoutes = require('./routes/debug.routes');
 const debugDataRoutes = require('./routes/debug-data.routes');
 const notificationRoutes = require('./routes/notification.routes');
+const clientProfileRoutes = require('./routes/client-profile.routes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/chat-teste', chatRoutes);
 app.use('/debug', debugRoutes);
 app.use('/debug/data', debugDataRoutes);
 app.use('/notifications', notificationRoutes);
+app.use('/client-profiles', clientProfileRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
