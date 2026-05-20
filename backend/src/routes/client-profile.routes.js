@@ -5,7 +5,11 @@ const clientProfileController = require('../controllers/client-profile.controlle
 const router = Router();
 
 router.get('/', clientProfileController.handleListClientProfiles);
-router.get('/:phone', clientProfileController.handleGetClientProfile);
+router.post('/', clientProfileController.handleCreateClientProfile);
 router.patch('/:phone/provider', clientProfileController.handleUpdateClientProfileProvider);
+router.patch('/:phone/status', clientProfileController.handleUpdateClientProfileStatus);
+router.get('/:phone', clientProfileController.handleGetClientProfile);
+router.put('/:phone', clientProfileController.handleUpdateClientProfile);
+router.delete('/:phone', clientProfileController.handleDeleteClientProfile);
 
 module.exports = router;

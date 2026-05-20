@@ -173,7 +173,7 @@ async function handleAdminCommand({ command, from, reply }) {
     return;
   }
 
-  const profile = await clientProfileService.getOrCreateClientProfileByPhone(telefone);
+  const profile = await clientProfileService.getClientProfileByPhone(telefone);
   const lines = [
     `Perfil: ${profile.nomeCliente}`,
     `Tipo de negócio: ${profile.tipoNegocio}`,

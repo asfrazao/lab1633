@@ -52,7 +52,13 @@ async function handleProfileDebug(req, res, next) {
 
   try {
     const profile = await clientProfileService.getClientProfileByPhone(req.params.phone);
-    return res.json(profile);
+    return res.json({
+      phone: clientProfileService.normalizePhone(req.params.phone),
+      profile,
+      provider: aiOrchestratorService.getAIProvider(profile),
+      openaiConfigured: aiService.isOpenAIConfigured(),
+      agenticEnabled: true,
+    });
   } catch (error) {
     return next(error);
   }

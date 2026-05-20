@@ -224,6 +224,72 @@ curl -X PATCH http://localhost:3000/client-profiles/5511999999999/provider -H "C
 
 Essas rotas ainda sao administrativas locais e devem receber autenticacao antes de uso em producao.
 
+## CRUD de perfis de clientes
+
+Perfis controlam telefone, nome do cliente, tipo de negócio, modo de IA (`mock`, `openai` ou `auto`), prompt específico e status ativo/inativo. O perfil `default` é mantido automaticamente e não pode ser excluído ou desativado.
+
+Listar perfis:
+
+```cmd
+curl http://localhost:3000/client-profiles
+```
+
+Criar perfil Casa de Bolo:
+
+```cmd
+curl -X POST http://localhost:3000/client-profiles -H "Content-Type: application/json" -d "{\"telefone\":\"5511997622828\",\"nomeCliente\":\"Casa de Bolo da Ana\",\"tipoNegocio\":\"doceria\",\"aiProvider\":\"mock\",\"ativo\":true,\"descricao\":\"Perfil de demonstração para casa de bolos.\",\"promptPerfil\":\"Você é um agente de atendimento para uma casa de bolos. Ajude a coletar data do evento, tipo de bolo, sabor, tamanho, quantidade de pessoas, tema, retirada ou entrega e forma de pagamento.\"}"
+```
+
+Criar perfil Barbearia:
+
+```cmd
+curl -X POST http://localhost:3000/client-profiles -H "Content-Type: application/json" -d "{\"telefone\":\"5511973638882\",\"nomeCliente\":\"Barbearia do João\",\"tipoNegocio\":\"barbearia\",\"aiProvider\":\"mock\",\"ativo\":true,\"descricao\":\"Perfil de demonstração para barbearia.\",\"promptPerfil\":\"Você é um agente de atendimento para uma barbearia. Ajude a identificar serviço desejado, dia, horário, barbeiro de preferência e necessidade de lembrete.\"}"
+```
+
+Consultar perfil:
+
+```cmd
+curl http://localhost:3000/client-profiles/5511997622828
+```
+
+Alterar para OpenAI:
+
+```cmd
+curl -X PATCH http://localhost:3000/client-profiles/5511997622828/provider -H "Content-Type: application/json" -d "{\"provider\":\"openai\"}"
+```
+
+Alterar para mock:
+
+```cmd
+curl -X PATCH http://localhost:3000/client-profiles/5511997622828/provider -H "Content-Type: application/json" -d "{\"provider\":\"mock\"}"
+```
+
+Desativar perfil:
+
+```cmd
+curl -X PATCH http://localhost:3000/client-profiles/5511997622828/status -H "Content-Type: application/json" -d "{\"ativo\":false}"
+```
+
+Reativar perfil:
+
+```cmd
+curl -X PATCH http://localhost:3000/client-profiles/5511997622828/status -H "Content-Type: application/json" -d "{\"ativo\":true}"
+```
+
+Atualizar perfil:
+
+```cmd
+curl -X PUT http://localhost:3000/client-profiles/5511997622828 -H "Content-Type: application/json" -d "{\"nomeCliente\":\"Casa de Bolo da Ana\",\"tipoNegocio\":\"doceria artesanal\",\"aiProvider\":\"mock\",\"ativo\":true,\"descricao\":\"Perfil atualizado para casa de bolos artesanais.\",\"promptPerfil\":\"Você é um agente especializado em pedidos de bolos artesanais. Colete data, sabor, tamanho, tema, quantidade de pessoas e retirada ou entrega.\"}"
+```
+
+Excluir perfil:
+
+```cmd
+curl -X DELETE http://localhost:3000/client-profiles/5511997622828
+```
+
+Evite cadastrar números reais em repositório público sem cuidado. Futuramente estes perfis devem migrar para banco com autenticação administrativa.
+
 ## Endpoints de debug local
 
 - `GET /debug/ai`

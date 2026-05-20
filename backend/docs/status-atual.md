@@ -28,6 +28,10 @@
 - Tools disponiveis: `get_client_profile`, `save_lead`, `create_hot_lead_notification`, `finish_conversation`, `restart_conversation`, `get_plans`, `get_business_playbook`
 - `#mock` mantem modo sem custo
 - `#openai` ativa OpenAI agentic por numero
+- CRUD de perfis de clientes implementado em `/client-profiles`
+- Perfis ainda persistidos em JSON local
+- Perfis inativos nao sao usados no runtime; o fluxo cai para `default`
+- Atencao: proteger dados reais antes de producao
 
 ## Proximos passos
 
@@ -41,3 +45,4 @@
 8. Adicionar autenticacao admin
 9. Criar painel de perfis
 10. Avaliar WhatsApp oficial
+11. Criar painel web simples para gerenciar perfis
