@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lab1633 Admin</title>
+    <link rel="stylesheet" href="/admin/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">L</div>
+          <div>
+            <strong>Lab1633</strong>
+            <span>Admin</span>
+          </div>
+        </div>
+        <nav class="nav-tabs" aria-label="Navegação principal">
+          <button class="nav-tab active" data-tab="overview">Visão geral</button>
+          <button class="nav-tab" data-tab="profiles">Perfis</button>
+          <button class="nav-tab" data-tab="notifications">Notificações</button>
+          <button class="nav-tab" data-tab="tester">Testar agente</button>
+        </nav>
+        <div class="token-box">
+          <label for="adminToken">Token admin</label>
+          <input id="adminToken" type="password" placeholder="Opcional" autocomplete="off" />
+          <p>Enviado como <code>x-admin-token</code> quando configurado.</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <h1>Lab1633 Admin</h1>
+            <p>Gestão local de perfis, notificações e testes do agente.</p>
+          </div>
+          <div class="topbar-actions">
+            <span id="apiStatus" class="status-pill">Verificando</span>
+            <button id="refreshBtn" class="btn btn-primary" type="button">Atualizar</button>
+          </div>
+        </header>
+
+        <section id="overview" class="tab-panel active">
+          <div class="section-head">
+            <h2>Visão geral</h2>
+            <p>Status rápido do backend local.</p>
+          </div>
+          <div class="metrics-grid">
+            <article class="metric-card">
+              <span>Status da API</span>
+              <strong id="metricApi">Carregando</strong>
+              <small id="metricApiDetail">GET /health</small>
+            </article>
+            <article class="metric-card">
+              <span>OpenAI</span>
+              <strong id="metricOpenAI">Carregando</strong>
+              <small id="metricOpenAIDetail">GET /debug/ai</small>
+            </article>
+            <article class="metric-card">
+              <span>Perfis cadastrados</span>
+              <strong id="metricProfiles">0</strong>
+              <small>Inclui perfil default</small>
+            </article>
+            <article class="metric-card">
+              <span>Não lidas</span>
+              <strong id="metricUnread">0</strong>
+              <small>Notificações de lead quente</small>
+            </article>
+          </div>
+          <div class="info-band">
+            <div>
+              <h3>WhatsApp local</h3>
+              <p>Use <code>npm run whatsapp:dev</code> no terminal para iniciar o canal WhatsApp Web.</p>
+            </div>
+            <button class="btn btn-secondary" type="button" data-tab-jump="tester">Testar agente</button>
+          </div>
+        </section>
+
+        <section id="profiles" class="tab-panel">
+          <div class="section-head row-head">
+            <div>
+              <h2>Perfis</h2>
+              <p>Gerencie números, nichos, prompts e provider por perfil.</p>
+            </div>
+            <button id="newProfileBtn" class="btn btn-primary" type="button">Novo perfil</button>
+          </div>
+          <div class="toolbar">
+            <input id="profileSearch" type="search" placeholder="Buscar por cliente, telefone ou tipo" />
+            <select id="providerFilter">
+              <option value="">Todos providers</option>
+              <option value="mock">mock</option>
+              <option value="openai">openai</option>
+              <option value="auto">auto</option>
+            </select>
+            <select id="statusFilter">
+              <option value="">Todos status</option>
+              <option value="active">Ativos</option>
+              <option value="inactive">Inativos</option>
+            </select>
+          </div>
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Telefone</th>
+                  <th>Tipo</th>
+                  <th>Provider</th>
+                  <th>Status</th>
+                  <th>Atualizado</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="profilesTable"></tbody>
+            </table>
+            <div id="profilesEmpty" class="empty-state hidden">Nenhum perfil encontrado.</div>
+          </div>
+        </section>
+
+        <section id="notifications" class="tab-panel">
+          <div class="section-head row-head">
+            <div>
+              <h2>Notificações</h2>
+              <p>Leads quentes e encaminhamentos para atendimento humano.</p>
+            </div>
+            <select id="notificationFilter">
+              <option value="all">Todas</option>
+              <option value="unread">Não lidas</option>
+              <option value="resolved">Resolvidas</option>
+            </select>
+          </div>
+          <div id="notificationsList" class="notification-list"></div>
+          <div id="notificationsEmpty" class="empty-state hidden">Nenhuma notificação encontrada.</div>
+        </section>
+
+        <section id="tester" class="tab-panel">
+          <div class="section-head">
+            <h2>Testar agente</h2>
+            <p>Envie uma mensagem diretamente para <code>/chat-teste</code>.</p>
+          </div>
+          <div class="tester-grid">
+            <form id="testerForm" class="card-form">
+              <label>
+                Telefone
+                <input id="testerPhone" name="phone" required placeholder="5511999999999" />
+              </label>
+              <label>
+                Mensagem
+                <textarea id="testerMessage" name="message" required rows="5" placeholder="Oi"></textarea>
+              </label>
+              <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Enviar teste</button>
+                <button id="clearTesterBtn" class="btn btn-secondary" type="button">Limpar resposta</button>
+              </div>
+              <div class="form-actions">
+                <button id="debugProfileBtn" class="btn btn-ghost" type="button">Ver perfil aplicado</button>
+                <button id="debugAgenticBtn" class="btn btn-ghost" type="button">Debug agentic</button>
+              </div>
+            </form>
+            <div class="result-card">
+              <h3>Resposta</h3>
+              <pre id="testerResult">Nenhum teste executado.</pre>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="profileModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <div>
+            <h2 id="profileModalTitle">Novo perfil</h2>
+            <p id="profileModalSubtitle">Configure o perfil do número.</p>
+          </div>
+          <button class="icon-btn" type="button" data-close-modal>&times;</button>
+        </div>
+        <form id="profileForm" class="profile-form">
+          <input id="profileMode" type="hidden" value="create" />
+          <div class="form-grid">
+            <label>
+              Telefone
+              <input id="profilePhone" name="telefone" placeholder="5511999999999" />
+            </label>
+            <label>
+              Cliente
+              <input id="profileName" name="nomeCliente" required />
+            </label>
+            <label>
+              Tipo de negócio
+              <input id="profileBusiness" name="tipoNegocio" required placeholder="doceria" />
+            </label>
+            <label>
+              Provider
+              <select id="profileProvider" name="aiProvider" required>
+                <option value="mock">mock</option>
+                <option value="openai">openai</option>
+                <option value="auto">auto</option>
+              </select>
+            </label>
+          </div>
+          <label class="checkbox-row">
+            <input id="profileActive" name="ativo" type="checkbox" checked />
+            Perfil ativo
+          </label>
+          <label>
+            Descrição
+            <textarea id="profileDescription" name="descricao" rows="3"></textarea>
+          </label>
+          <label>
+            Prompt do perfil
+            <textarea id="profilePrompt" name="promptPerfil" rows="7" required></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Salvar</button>
+            <button id="generatePromptBtn" class="btn btn-secondary" type="button">Gerar prompt padrão</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="detailsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+      <div class="modal-panel details-panel">
+        <div class="modal-head">
+          <div>
+            <h2 id="detailsTitle">Detalhes do perfil</h2>
+            <p>Dados completos e comandos úteis.</p>
+          </div>
+          <button class="icon-btn" type="button" data-close-details>&times;</button>
+        </div>
+        <div id="detailsContent"></div>
+      </div>
+    </div>
+
+    <div id="toastHost" class="toast-host" aria-live="polite"></div>
+    <script src="/admin/app.js"></script>
+  </body>
+</html>

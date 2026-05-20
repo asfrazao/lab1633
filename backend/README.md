@@ -55,6 +55,43 @@ npm run dev
 
 O `nodemon.json` ignora `src/data/*`, evitando reinicio quando os arquivos JSON locais mudam durante testes.
 
+## Painel administrativo
+
+O backend serve um painel administrativo local em:
+
+```text
+http://localhost:3000/admin
+```
+
+Para usar:
+
+```cmd
+npm run dev
+```
+
+Depois abra `http://localhost:3000/admin` no navegador.
+
+Funcionalidades:
+
+- Dashboard de status da API, OpenAI, perfis e notificações não lidas
+- CRUD visual de perfis de clientes/testadores
+- Alternância rápida de provider `mock`, `openai` e `auto`
+- Ativar e desativar perfis
+- Visualizar detalhes e prompt do perfil
+- Visualizar notificações de leads quentes
+- Marcar notificação como lida
+- Resolver notificação
+- Testar o agente via `/chat-teste`
+- Consultar `/debug/profile/:phone` e `/debug/agentic/:phone`
+
+Avisos:
+
+- O painel atual é para ambiente local/desenvolvimento.
+- Antes de publicar em produção, proteja com autenticação real.
+- Não exponha o painel publicamente sem autenticação.
+- O provider `openai` usa a `OPENAI_API_KEY` do backend e pode gerar custo.
+- O frontend permite salvar um token admin local para envio no header `x-admin-token`, mas as rotas atuais continuam abertas para desenvolvimento local.
+
 ## Demonstracao local no WhatsApp pessoal
 
 Essa integracao usa WhatsApp Web local via `whatsapp-web.js`. Ela serve apenas para demonstracao/MVP, nao e a WhatsApp Cloud API oficial e nao deve ser usada para spam.

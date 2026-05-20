@@ -1,5 +1,17 @@
 [
   {
+    "id": "profile-5511000000001",
+    "telefone": "5511000000001",
+    "nomeCliente": "Casa de Bolo Atualizada",
+    "tipoNegocio": "doceria artesanal",
+    "aiProvider": "openai",
+    "ativo": true,
+    "descricao": "Perfil atualizado.",
+    "promptPerfil": "Você é um agente especializado em pedidos de bolos artesanais.",
+    "createdAt": "2026-05-20T18:01:50.084Z",
+    "updatedAt": "2026-05-20T18:48:29.218Z"
+  },
+  {
     "id": "default",
     "telefone": "*",
     "nomeCliente": "Demonstração Lab1633",
@@ -22,29 +34,5 @@
     "promptPerfil": "Você é o Agente Comercial da Lab1633. Seu objetivo é entender o negócio do usuário, identificar dores no WhatsApp, demonstrar como um agente de IA ajudaria, qualificar o lead e encaminhar para Alessandro quando houver interesse.",
     "createdAt": "2026-05-20T17:39:14.549Z",
     "updatedAt": "2026-05-20T17:39:14.549Z"
-  },
-  {
-    "id": "profile-5511998880187",
-    "telefone": "5511998880187",
-    "nomeCliente": "Demonstração Lab1633",
-    "tipoNegocio": "generico",
-    "aiProvider": "openai",
-    "ativo": true,
-    "descricao": "Perfil padrão para demonstrações gerais da Lab1633.",
-    "promptPerfil": "Você é o Agente Comercial da Lab1633. Seu objetivo é entender o negócio do usuário, identificar dores no WhatsApp, demonstrar como um agente de IA ajudaria, qualificar o lead e encaminhar para Alessandro quando houver interesse.",
-    "createdAt": "2026-05-20T17:39:14.549Z",
-    "updatedAt": "2026-05-20T17:39:14.549Z"
-  },
-  {
-    "id": "profile-5511000000001",
-    "telefone": "5511000000001",
-    "nomeCliente": "Casa de Bolo Atualizada",
-    "tipoNegocio": "doceria artesanal",
-    "aiProvider": "mock",
-    "ativo": true,
-    "descricao": "Perfil atualizado.",
-    "promptPerfil": "Você é um agente especializado em pedidos de bolos artesanais.",
-    "createdAt": "2026-05-20T18:01:50.084Z",
-    "updatedAt": "2026-05-20T18:02:02.954Z"
   }
 ]

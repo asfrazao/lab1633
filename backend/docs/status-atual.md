@@ -32,6 +32,11 @@
 - Perfis ainda persistidos em JSON local
 - Perfis inativos nao sao usados no runtime; o fluxo cai para `default`
 - Atencao: proteger dados reais antes de producao
+- Painel administrativo criado em `/admin`
+- CRUD visual de perfis no navegador
+- Gestao visual de provider `mock`, `openai` e `auto`
+- Visualizacao e acoes de notificacoes no painel
+- Teste manual do agente pelo navegador via `/chat-teste`
 
 ## Proximos passos
 
@@ -46,3 +51,4 @@
 9. Criar painel de perfis
 10. Avaliar WhatsApp oficial
 11. Criar painel web simples para gerenciar perfis
+12. Evoluir painel com autenticação real e banco de dados

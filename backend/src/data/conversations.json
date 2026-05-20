@@ -1,1 +1,84 @@
-[]
+[
+  {
+    "id": "4aa00309-4036-4088-83cc-2865773ab902",
+    "telefone": "126950760812679",
+    "estado": "identificar_negocio",
+    "tipoNegocio": null,
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "frio",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "oi",
+        "createdAt": "2026-05-20T18:40:35.532Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Oi, eu sou o Agente Comercial da Lab1633. A gente cria agentes de IA para atendimento no WhatsApp. Qual e o seu tipo de negocio?",
+        "createdAt": "2026-05-20T18:40:35.548Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "oi",
+        "createdAt": "2026-05-20T18:41:16.201Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Entendi. So para eu te mostrar um exemplo mais certeiro: seu negocio vende produto, presta servico ou faz atendimento/agendamento pelo WhatsApp?",
+        "createdAt": "2026-05-20T18:41:16.204Z"
+      }
+    ],
+    "createdAt": "2026-05-20T18:40:35.527Z",
+    "updatedAt": "2026-05-20T18:41:16.205Z",
+    "profileId": "default",
+    "clientName": "Demonstração Lab1633",
+    "aiProvider": "mock"
+  },
+  {
+    "id": "35ed8695-abe6-4947-aa3c-9e316d20b908",
+    "telefone": "5511975773755",
+    "estado": "diagnosticar_dor",
+    "tipoNegocio": "Desenvolvedor de Sites e Aplicativos",
+    "dorPrincipal": null,
+    "nome": null,
+    "nivelInteresse": "morno",
+    "historico": [
+      {
+        "origem": "cliente",
+        "mensagem": "Oi",
+        "createdAt": "2026-05-20T18:54:58.039Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Legal. Nesse tipo de negocio, um agente de IA pode ajudar a responder duvidas, coletar informacoes do cliente e organizar oportunidades pelo WhatsApp. Hoje sua maior dificuldade e responder rapido, organizar pedidos ou fechar mais vendas?",
+        "createdAt": "2026-05-20T18:54:58.043Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Quero vender sites e aplicativos pelo WhatsApp",
+        "createdAt": "2026-05-20T18:55:14.544Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Imagine um cliente chamando no WhatsApp. O agente faria as primeiras perguntas, entenderia o que ele precisa, coletaria dados importantes e te entregaria um resumo para voce responder com mais velocidade.",
+        "createdAt": "2026-05-20T18:55:14.545Z"
+      },
+      {
+        "origem": "cliente",
+        "mensagem": "Oi",
+        "createdAt": "2026-05-20T18:57:37.307Z"
+      },
+      {
+        "origem": "agente",
+        "mensagem": "Oi! Seguindo a ideia: para vender sites e aplicativos pelo WhatsApp, o agente pode qualificar o cliente, entender o projeto, prazo e orçamento, e te entregar o lead pronto para fechar. Hoje voce perde mais oportunidades por demora na resposta ou por falta de organizacao dos contatos?",
+        "createdAt": "2026-05-20T18:57:45.061Z"
+      }
+    ],
+    "createdAt": "2026-05-20T18:54:58.038Z",
+    "updatedAt": "2026-05-20T18:57:45.067Z",
+    "profileId": "profile-5511975773755",
+    "clientName": "Alessandro",
+    "aiProvider": "openai"
+  }
+]

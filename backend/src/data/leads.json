@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": "9ede56f0-8e1c-460b-84ca-a9c08b8faaa0",
+    "telefone": "126950760812679",
+    "nome": null,
+    "tipoNegocio": null,
+    "dorPrincipal": null,
+    "nivelInteresse": "frio",
+    "profileId": "default",
+    "clientName": "Demonstração Lab1633",
+    "aiProvider": "mock",
+    "resumo": "Cliente iniciou contato com o Agente Comercial Lab1633.",
+    "status": "novo",
+    "createdAt": "2026-05-20T18:40:35.560Z",
+    "updatedAt": "2026-05-20T18:41:16.223Z"
+  },
+  {
+    "id": "6cd30f84-d38b-4591-904b-ae544a7c789e",
+    "telefone": "5511975773755",
+    "nome": null,
+    "tipoNegocio": "Desenvolvedor de Sites e Aplicativos",
+    "dorPrincipal": null,
+    "nivelInteresse": "morno",
+    "profileId": "profile-5511975773755",
+    "clientName": "Alessandro",
+    "aiProvider": "openai",
+    "resumo": "Cliente informou trabalhar com Desenvolvedor de Sites e Aplicativos e demonstrou interesse em organizar atendimentos e oportunidades pelo WhatsApp.",
+    "status": "novo",
+    "createdAt": "2026-05-20T18:54:58.053Z",
+    "updatedAt": "2026-05-20T18:57:45.077Z"
+  }
+]
